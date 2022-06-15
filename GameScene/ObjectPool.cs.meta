@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1a300a188f3124e7a9df24b2f8c9dfea
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - Slime: {fileID: 1919012471076396, guid: 55776efecb0cd134ea5f418c2f97a705, type: 3}
+  - Turtle: {fileID: 1774625739149480, guid: 38efdaadbfe1d624bbee439cb02e7661, type: 3}
+  - Wall: {fileID: 3596175342256850626, guid: 433702a9ec47f4ce287cbd609d5a04ca, type: 3}
+  - ErrorObject: {fileID: 100000, guid: 3a10f356a080e464492ad7f78652406e, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
