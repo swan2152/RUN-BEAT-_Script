@@ -41,6 +41,9 @@ public class SystemSEController : MonoBehaviour
                 SESource.PlayOneShot(SystemSE[4]); // ゲームクリア, 歓声
                 SESource.PlayOneShot(SystemSE[5]);
                 break;
+            case "Attack":
+                SESource.PlayOneShot(SystemSE[6]); // 効果音テスト用
+                break;
             default:
                 break;
         }

@@ -55,6 +55,9 @@ public class ScrollController : MonoBehaviour
     GameObject LevelUI;
     GameObject ClearLampUI;
 
+    // ノードの音量を調整するオブジェクト
+    AudioSource GameMusicVolume;
+
     // 曲名, 作曲者名, スコア, ランク, レベル, 達成率, クリアランプのプレビューを表示するUI
     GameObject MusicNamePreView;
     GameObject MusicComposerPreView;
@@ -71,7 +74,8 @@ public class ScrollController : MonoBehaviour
 
     // 曲のプレビュー
     AudioSource _AudioSource;
-    AudioSource BackGround;
+    AudioSource SESource;
+    AudioSource SelectMusic;
 
     // どのノードを指しているか示す(NowIndex -> 何曲目か NowDiff -> Difficult[NowDiff])
     public static int NowIndex = -1;
@@ -101,6 +105,12 @@ public class ScrollController : MonoBehaviour
         // どの難易度を表示するかによって、ロードするCSVを決定する
         LoadList(GetPassIndex(Content.name));
 
+        // 音量のロード
+        SelectMusic = GameObject.Find("SelectMusic").GetComponent<AudioSource>();
+        SESource = GameObject.Find("SystemSEController").GetComponent<AudioSource>();
+        SelectMusic.volume = PlayerPrefs.GetFloat("GameVolume", 0.4f);
+        SESource.volume = PlayerPrefs.GetFloat("SEVolume", 0.7f);
+
         // 楽曲情報プレビューUI
         MusicNamePreView = GameObject.Find("MusicNamePreView");
         MusicComposerPreView = GameObject.Find("ComposerPreView");
@@ -119,6 +129,8 @@ public class ScrollController : MonoBehaviour
         RankUI = MusicNode.transform.Find("RANK").gameObject;
         LevelUI = MusicNode.transform.Find("Level").gameObject;
         ClearLampUI = MusicNode.transform.Find("ClearLamp").gameObject;
+        GameMusicVolume = MusicNode.transform.Find("GameMusic").gameObject
+            .GetComponent<AudioSource>();
 
         // 楽曲リストUI生成
         for(int i = 0; i < MusicTotal; i++){
@@ -128,6 +140,7 @@ public class ScrollController : MonoBehaviour
             RankUI.GetComponent<Text>().text = Rank[i];
             LevelUI.GetComponent<Text>().text = Level[i].ToString();
             ClearLampUI.GetComponent<Text>().text = ClearLamp[i];
+            GameMusicVolume.volume = PlayerPrefs.GetFloat("GameVolume", 0.4f);
             GameObject Music = Instantiate(MusicNode, Content.transform) as GameObject;
             Music.name = MusicNode.name;
             NodeList.Add(Music);
@@ -141,7 +154,6 @@ public class ScrollController : MonoBehaviour
         NowIndex = -1;
         NowDiff = 0;
 
-        BackGround = GameObject.Find("SelectMusic").GetComponent<AudioSource>();
         // /Users/swan1118/UnityProduction/RUN&BEAT!!!/Assets/StreamingAssets
         Debug.Log(Application.streamingAssetsPath);
     }
@@ -180,9 +192,12 @@ public class ScrollController : MonoBehaviour
         }
     }
 
+    // CSVでまとめた楽曲リストをロードする(WebGL版)
+
+
     // 曲のプレビュー
     public void PlayPreView(int Index){
-        BackGround.Stop();
+        SelectMusic.Stop();
         if(NowIndex != -1 && _AudioSource.isPlaying){
             _AudioSource.Stop();
         }

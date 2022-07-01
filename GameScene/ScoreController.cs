@@ -28,7 +28,10 @@ public class ScoreController : MonoBehaviour
             case "PERFECT":
                 Score += 1000;
                 break;
-            case "GREAT":
+            case "GREAT_FAST":
+                Score += 500;
+                break;
+            case "GREAT_LATE":
                 Score += 500;
                 break;
             case "DAMAGE":

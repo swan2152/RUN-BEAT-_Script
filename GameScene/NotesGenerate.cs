@@ -53,6 +53,7 @@ public class NotesGenerate : MonoBehaviour
             _AudioSource = GameObject.Find("GameMusic").GetComponent<AudioSource>();
             _AudioSource.clip = Resources.Load("GameMusic/Tutorial") as AudioClip;
         }
+            _AudioSource.volume = PlayerPrefs.GetFloat("GameVolume", 0.4f);
             JudgeLine = GameObject.Find("JudgeLine");
             Timing = new float[1024];
             Pos = new int[1024];

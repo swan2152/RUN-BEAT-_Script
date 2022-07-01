@@ -24,7 +24,7 @@ public class ResultController : MonoBehaviour
 
     AudioClip Audience;
     AudioClip ClearVoice;
-    AudioClip ResultBGM;
+    AudioSource ResultBGM;
     AudioSource _AudioSource;
 
     // 楽曲情報を保存するCSVのパスの取得
@@ -78,7 +78,8 @@ public class ResultController : MonoBehaviour
         ClearLampUI = GameObject.Find("ClearLamp");
         Audience = GameObject.Find("AudienceVoice").GetComponent<AudioSource>().clip;
         ClearVoice = GameObject.Find("ClearVoice").GetComponent<AudioSource>().clip;
-        ResultBGM = GameObject.Find("ResultBGM").GetComponent<AudioSource>().clip;
+        ResultBGM = GameObject.Find("ResultBGM").GetComponent<AudioSource>();
+        ResultBGM.volume = PlayerPrefs.GetFloat("SEVolume", 0.7f);
         _AudioSource = GetComponent<AudioSource>();
 
         RankCalc();

@@ -9,6 +9,7 @@ public class JudgeController : MonoBehaviour
     // 敵の座標を取得({-4.5f, -1.5f, 0, 1.5f, 4.5f})
     GameObject Player;                          // プレイヤー
     GameObject JudgeUI;                         
+    GameObject FastorLateUI;                    
     Text UItext;                                // 判定文字
     public GameObject Canvas;
     public Camera GameCamera;                   // ゲーム内のカメラ
@@ -20,6 +21,7 @@ public class JudgeController : MonoBehaviour
     // 判定の表示に用いる文字
     string[] JudgeSource = {"PERFECT!!", "GREAT!", "PASS!", "MISS...", "DAMAGE!"};
     public string JudgeText;
+    public string FastorLateText;
 
     // 判定文字を表示する箇所
     Vector3[] PosSource = new[]{ 
@@ -48,6 +50,7 @@ public class JudgeController : MonoBehaviour
     void Start()
     {
         JudgeUI = Resources.Load<GameObject>("Judge");
+        FastorLateUI = JudgeUI.transform.Find("FastorLate").gameObject;
         _AudioSource = GameObject.Find("GameMusic").GetComponent<AudioSource>();
     }
 
@@ -92,26 +95,39 @@ public class JudgeController : MonoBehaviour
         switch (Judge){
             case "PERFECT":
                 JudgeText = JudgeSource[0];
+                FastorLateText = "";
                 JudgeUI.GetComponent<Text>().color = Color.yellow;
                 Perfect++;
                 break;
-            case "GREAT":
+            case "GREAT_FAST":
                 JudgeText = JudgeSource[1];
+                FastorLateText = "FAST";
                 JudgeUI.GetComponent<Text>().color = Color.magenta;
+                FastorLateUI.GetComponent<Text>().color = Color.cyan;
+                Great++;
+                break;
+            case "GREAT_LATE":
+                JudgeText = JudgeSource[1];
+                FastorLateText = "LATE";
+                JudgeUI.GetComponent<Text>().color = Color.magenta;
+                FastorLateUI.GetComponent<Text>().color = Color.red;
                 Great++;
                 break;
             case "PASS":
                 JudgeText = JudgeSource[2];
+                FastorLateText = "";
                 JudgeUI.GetComponent<Text>().color = Color.green;
                 Pass++;
                 break;
             case "MISS":
                 JudgeText = JudgeSource[3];
+                FastorLateText = "";
                 JudgeUI.GetComponent<Text>().color = Color.gray;
                 Miss++;
                 break;
             case "DAMAGE":
                 JudgeText = JudgeSource[4];
+                FastorLateText = "";
                 JudgeUI.GetComponent<Text>().color = Color.red;
                 Damage++;
                 break;
@@ -119,6 +135,7 @@ public class JudgeController : MonoBehaviour
                 break;
         }
         JudgeUI.GetComponent<Text>().text = JudgeText.ToString();
+        FastorLateUI.GetComponent<Text>().text = FastorLateText.ToString();
         GameObject JudgeUIPrefab = Instantiate(JudgeUI, PosSource[PosIndex], Quaternion.identity);
         JudgeUIPrefab.transform.SetParent(Canvas.transform, false); 
         NotesCount++;

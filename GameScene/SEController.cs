@@ -10,6 +10,7 @@ public class SEController : MonoBehaviour
     void Start()
     {
         SESource = GetComponent<AudioSource>();
+        SESource.volume = PlayerPrefs.GetFloat("SEVolume", 0.7f);
     }
 
     // ゲーム中のSEを再生する関数

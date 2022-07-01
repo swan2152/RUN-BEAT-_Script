@@ -13,6 +13,9 @@ public class ModeController : MonoBehaviour
     GameObject Back;
     GameObject Quit;
     
+    // 音楽
+    AudioSource SESource;
+    AudioSource SelectMusic;
 
     void Start()
     {
@@ -20,6 +23,11 @@ public class ModeController : MonoBehaviour
         Tutorial = GameObject.Find("Tutorial");
         Back = GameObject.Find("Back");
         Quit = GameObject.Find("Quit");
+        SelectMusic = GameObject.Find("SelectMusic").GetComponent<AudioSource>();
+        SESource = GameObject.Find("SystemSEController").GetComponent<AudioSource>();
+        SelectMusic.volume = PlayerPrefs.GetFloat("GameVolume", 0.4f);
+        SESource.volume = PlayerPrefs.GetFloat("SEVolume", 0.7f);
+        // OptionController.Instance.GetVolume(SelectMusic, SESource);
     }
 
     
@@ -41,15 +49,22 @@ public class ModeController : MonoBehaviour
                 FadeController.Instance.FadeOutScene("Tutorial");
                 break;
             
-            // タイトルに戻る
+            // 設定
             case 2:
+                SystemSEController.Instance.PlaySystemSE("Select");
+                // SceneManager.LoadScene("Option");
+                FadeController.Instance.FadeOutScene("Option");
+                break;
+
+            // タイトルに戻る
+            case 3:
                 SystemSEController.Instance.PlaySystemSE("Select");
                 // SceneManager.LoadScene("Title");
                 FadeController.Instance.FadeOutScene("Title");
                 break;
             
             // ゲーム終了
-            case 3:
+            case 4:
                 QuitGame();
                 break;
             default:

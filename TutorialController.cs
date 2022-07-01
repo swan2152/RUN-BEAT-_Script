@@ -19,6 +19,10 @@ public class TutorialController : MonoBehaviour
     bool Called = false;                  // テキストが開始されたか
     float ElapsedTime = 0.0f;
 
+    // 音量のロード
+    AudioSource SESource;
+    AudioSource GameMusic;
+
     // 新しいテキストを再生するタイミング
     float[] TimeTrigger = {6f, 11f, 16f, 21f, 31f, 36f, 46f, 51f, 61f, 71f};
 
@@ -26,6 +30,7 @@ public class TutorialController : MonoBehaviour
     void Start()
     {
         MessageSource = GameObject.Find("MessageSE").GetComponent<AudioSource>();
+        MessageSource.volume = PlayerPrefs.GetFloat("SEVolume", 0.7f);
     }
 
     void Update()

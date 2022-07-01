@@ -8,6 +8,8 @@ public class JudgeLineController : MonoBehaviour
     float PlayerSpeed = 20f;                   // プレイヤー速度
     float JudgeWidth = 2f;                     // 判定幅
     bool Move = true;                          // プレイヤーが動いているかどうか
+    public bool Debug = false;                 // デバッグモードか（trueならオートプレイ）
+    bool FastorLate = true;                    // trueならFast, falseならLate
 
     // 判定ラインの周りの敵の管理
     GameObject[] Slimes;
@@ -41,12 +43,17 @@ public class JudgeLineController : MonoBehaviour
         Enemys = GameObject.FindGameObjectsWithTag(Name);
 
         // 敵が判定ラインの近くにいたら処理
-        if(Enemys.Length != 0){
+        if(Enemys.Length != 0 && Move == true){
             foreach (GameObject i_Enemy in Enemys){
-                float Dist = Mathf.Abs(i_Enemy.transform.position.z - JudgeLine.position.z);
-                if(Dist < MaxDist){
+                float Dist = i_Enemy.transform.position.z - JudgeLine.position.z;
+                if(Mathf.Abs(Dist) < MaxDist){
                     CloseEnemys = i_Enemy;
-                    MaxDist = Dist;
+                    MaxDist = Mathf.Abs(Dist);
+                    if(Dist > 0){
+                        FastorLate = true;
+                    }else{
+                        FastorLate = false;
+                    }
                 }
             }
             // 一番近い敵の判定を行う
@@ -58,8 +65,12 @@ public class JudgeLineController : MonoBehaviour
 
             // GREATの処理
             }else if(MaxDist <= 2.4f){
-                NotesProcessing(CloseEnemys, ClosePos, "GREAT");
-
+                if(FastorLate == true){
+                    NotesProcessing(CloseEnemys, ClosePos, "GREAT_FAST");
+                }else{
+                    NotesProcessing(CloseEnemys, ClosePos, "GREAT_LATE");
+                }
+                
             // 空振りの処理
             }else{
                 _SEController.PlaySE("SWING");
@@ -83,27 +94,40 @@ public class JudgeLineController : MonoBehaviour
 
     // 壁への衝突の判定
     void OnTriggerEnter(Collider other){
-        if(other.gameObject.tag == "Wall"){
+        if(Debug == false){
+            if(other.gameObject.tag == "Wall"){
+                float Dist = Mathf.Abs(Player.transform.position.x - other.transform.position.x);
+                float ClosePos = other.transform.position.x;
+
+                // もし判定ライン上でプレイヤーと壁の位置が一致していればダメージ処理
+                if(Dist <= 0.5f){
+                    _JudgeController.JudgeOutput(ClosePos, "DAMAGE");
+                    _ScoreController.ScoreUp("DAMAGE");
+                    _ComboController.ComboReset();
+                    _HPController.HPfluc("DAMAGE");
+                    _EffectController.EffectGenerate("DAMAGE", ClosePos);
+                    _SEController.PlaySE("DAMAGE");
+                    Player.GetComponent<CharaMove>().Damage();
+
+                // そうでなければ、避けたことを示す処理
+                }else{
+                    _JudgeController.JudgeOutput(ClosePos, "PASS");
+                    _EffectController.EffectGenerate("PASS", ClosePos);
+                    _SEController.PlaySE("WallDudge");
+                }
+                other.gameObject.SetActive(false);
+            }
+        }else{
             float Dist = Mathf.Abs(Player.transform.position.x - other.transform.position.x);
             float ClosePos = other.transform.position.x;
-
-            // もし判定ライン上でプレイヤーと壁の位置が一致していればダメージ処理
-            if(Dist <= 0.5f){
-                _JudgeController.JudgeOutput(ClosePos, "DAMAGE");
-                _ScoreController.ScoreUp("DAMAGE");
-                _ComboController.ComboReset();
-                _HPController.HPfluc("DAMAGE");
-                _EffectController.EffectGenerate("DAMAGE", ClosePos);
-                _SEController.PlaySE("DAMAGE");
-                Player.GetComponent<CharaMove>().Damage();
-
-            // そうでなければ、避けたことを示す処理
-            }else{
+            // オートプレイモード　プレイヤーの位置関わらず全部PERFECT,PASS
+            if(other.gameObject.tag == "Wall"){
                 _JudgeController.JudgeOutput(ClosePos, "PASS");
                 _EffectController.EffectGenerate("PASS", ClosePos);
                 _SEController.PlaySE("WallDudge");
+            }else{
+                NotesProcessing(other.gameObject, ClosePos, "PERFECT");
             }
-            other.gameObject.SetActive(false);
         }
         
     }

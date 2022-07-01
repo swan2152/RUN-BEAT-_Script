@@ -12,11 +12,20 @@ public class TitleController : MonoBehaviour
     // Text AnnounceText;
     Image AnnounceImage;
 
+    // 音楽
+    AudioSource SESource;
+    AudioSource TitleMusic;
+
     void Start()
     {
         PressEnter = GameObject.Find("PRESSENTERLogo");
         // AnnounceText = PressEnter.GetComponent<Text>();
         AnnounceImage = PressEnter.GetComponent<Image>();
+
+        TitleMusic = GameObject.Find("TitleMusic").GetComponent<AudioSource>();
+        SESource = GameObject.Find("SystemSEController").GetComponent<AudioSource>();
+        TitleMusic.volume = PlayerPrefs.GetFloat("GameVolume", 0.4f);
+        SESource.volume = PlayerPrefs.GetFloat("SEVolume", 0.7f);
     }
 
     // スペースキーが押されたらゲーム開始
