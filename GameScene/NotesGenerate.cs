@@ -36,6 +36,7 @@ public class NotesGenerate : MonoBehaviour
     GameObject Slime;
     GameObject Turtle;
     GameObject Wall;
+    GameObject Road;
 
     TextAsset CSV;
 
@@ -63,11 +64,13 @@ public class NotesGenerate : MonoBehaviour
         _ObjectPool.CreatePool("Slime", 30);
         _ObjectPool.CreatePool("Turtle", 30);
         _ObjectPool.CreatePool("Wall", 30);
+        _ObjectPool.CreatePool("Road", 30);
 
         // 敵のロード
         Slime = Resources.Load<GameObject>("Slime");
         Turtle = Resources.Load<GameObject>("Turtle");
         Wall = Resources.Load<GameObject>("Wall");
+        Road = Resources.Load<GameObject>("Background_Building");
     }
 
     void Update()
@@ -156,7 +159,7 @@ public class NotesGenerate : MonoBehaviour
 
     // ノーツを生成する時間になったら次のノーツを生成
     void CheckNextNotes(){
-        if(Timing[NotesCount] + TimeOffset < GetMusicTime () && Timing [NotesCount] != 0){
+        if(Timing[NotesCount] < GetMusicTime () && Timing [NotesCount] != 0){
             SpawnNotes (Timing[NotesCount], Pos[NotesCount], Enemy[NotesCount]);
             NotesCount++;
         }

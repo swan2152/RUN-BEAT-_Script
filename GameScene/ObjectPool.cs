@@ -13,6 +13,7 @@ public class ObjectPool : MonoBehaviour
     List<GameObject> SlimePool; // スライムの管理
     List<GameObject> TurtlePool; // 亀の管理
     List<GameObject> WallPool; // 壁の管理
+    public List<GameObject> RoadPool; // 壁の管理
     
     // プールの生成 MaxCount = 生成限界数
     public void CreatePool(string Enemy, int MaxCount){
@@ -43,6 +44,15 @@ public class ObjectPool : MonoBehaviour
                     GameObject Obj = Instantiate(Wall);
                     Obj.SetActive(false);
                     WallPool.Add(Obj);
+                }
+                break;
+            case "Road":
+                RoadPool = new List<GameObject>();
+                for(int i = 0; i < MaxCount; i++){
+                    // オブジェクト生成
+                    GameObject Obj = Instantiate(Road);
+                    Obj.SetActive(false);
+                    RoadPool.Add(Obj);
                 }
                 break;
             default:
@@ -96,8 +106,6 @@ public class ObjectPool : MonoBehaviour
                 WallPool.Add(WallObj);
                 return WallObj;
                 break;
-            /*
-            // 実装時のエラーが直らないためまだ未実装
             case "Road":
                 // 使ってないものを探す
                 for(int i = 0; i < RoadPool.Count; i++){
@@ -116,7 +124,6 @@ public class ObjectPool : MonoBehaviour
                 Debug.Log("Add Road!");
                 return RoadObj;
                 break;
-            */
             default:
                 Debug.Log("ERROR!");
                 return ErrorObject;
